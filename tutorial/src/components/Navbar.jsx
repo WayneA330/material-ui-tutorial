@@ -1,5 +1,6 @@
 import { alpha, AppBar, Avatar, Badge, InputBase, makeStyles, Toolbar, Typography } from '@material-ui/core';
-import { Mail, Notifications, Search } from '@material-ui/icons';
+import { Cancel, Mail, Notifications, Search } from '@material-ui/icons';
+import { useState } from 'react';
 
 const useStyles = makeStyles(theme => ({
     toolbar: {
@@ -28,20 +29,28 @@ const useStyles = makeStyles(theme => ({
         borderRadius: theme.shape.borderRadius,
         width: '50%',
         [theme.breakpoints.down('sm')]: {
-            display: 'none',
+            display: (props) => props.open ? 'flex' : 'none',
+            width: '70%'
         }
     },
     input: {
         color:'white',
         marginLeft: theme.spacing(1)
     },
+    cancel: {
+        [theme.breakpoints.up('sm')]: {
+            display: 'none'
+        }
+    },
     searchButton: {
         marginRight: theme.spacing(2),
-
+        [theme.breakpoints.up('sm')]: {
+            display: 'none',
+        }
     },
     icons: {
-        display: 'flex',
-        alignItems: 'center'
+        alignItems: 'center',
+        display: (props) => props.open ? 'none' : 'flex',
     },
     badge: {
         marginRight: theme.spacing(2)
@@ -49,33 +58,35 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const Navbar = () => {
-  const classes = useStyles();
+    const [open, setOpen] = useState(false);
+    const classes = useStyles({ open });
 
-  return (
-    <AppBar>
-        <Toolbar className={classes.toolbar}>
-            <Typography variant='h6' className={classes.logoLg}>
-                Lema Dev
-            </Typography>
-            <Typography variant='h6' className={classes.logoSm}>
-                LAMA
-            </Typography>
-            <div className={classes.search}>
-                <Search />
-                <InputBase placeholder='Search...' className={classes.input}/>
-            </div>
-            <div className={classes.icons}>
-                <Search className={classes.searchButton}/>
-                <Badge badgeContent={4} color="secondary" className={classes.badge}>
-                    <Mail/>
-                </Badge>
-                <Badge badgeContent={2} color="secondary" className={classes.badge}>
-                    <Notifications/>
-                </Badge>
-                <Avatar alt='Wayne Celestin' src='https://images.pexels.com/photos/614810/pexels-photo-614810.jpeg?cs=srgb&dl=pexels-simon-robben-614810.jpg&fm=jpg'/>
-            </div>
-        </Toolbar>
-    </AppBar>
+    return (
+        <AppBar>
+            <Toolbar className={classes.toolbar}>
+                <Typography variant='h6' className={classes.logoLg}>
+                    Lema Dev
+                </Typography>
+                <Typography variant='h6' className={classes.logoSm}>
+                    LAMA
+                </Typography>
+                <div className={classes.search}>
+                    <Search />
+                    <InputBase placeholder='Search...' className={classes.input}/>
+                    <Cancel className={classes.cancel} onClick={() => setOpen(false)}/>
+                </div>
+                <div className={classes.icons}>
+                    <Search className={classes.searchButton} onClick={() => setOpen(true)}/>
+                    <Badge badgeContent={4} overlap='rectangular' color="secondary" className={classes.badge}>
+                        <Mail/>
+                    </Badge>
+                    <Badge badgeContent={2} overlap='rectangular' color="secondary" className={classes.badge}>
+                        <Notifications/>
+                    </Badge>
+                    <Avatar alt='Wayne Celestin' src='https://images.pexels.com/photos/614810/pexels-photo-614810.jpeg?cs=srgb&dl=pexels-simon-robben-614810.jpg&fm=jpg'/>
+                </div>
+            </Toolbar>
+        </AppBar>
 )};
 
 export default Navbar;
